@@ -12,6 +12,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { Page1Component } from './components/pages/page1/page1.component';
 import { Page2Component } from './components/pages/page2/page2.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
+import { TabViewerComponent } from './components/pages/tab-viewer/tab-viewer.component';
+import { TabComponent } from './components/sub-components/tabs/tab/tab.component';
+import { NoteComponent } from './components/sub-components/tabs/note/note.component';
+import { StringComponent } from './components/sub-components/tabs/string/string.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +23,11 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
     NavbarComponent,
     Page1Component,
     Page2Component,
-    NotFoundComponent
+    NotFoundComponent,
+    TabViewerComponent,
+    TabComponent,
+    NoteComponent,
+    StringComponent
   ],
   imports: [
     BrowserModule,
