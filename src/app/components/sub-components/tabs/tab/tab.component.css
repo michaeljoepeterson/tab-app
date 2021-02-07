@@ -8,6 +8,12 @@
     display: inline-block;
 }
 
+.note{
+    min-width: 14px;
+    display: flex;
+    align-items: center;
+}
+
 .note:hover{
     cursor: pointer;
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostListener, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnInit } from '@angular/core';
 import { InstrumentString } from 'src/app/models/tabs/instrumentString';
 import { Tab } from 'src/app/models/tabs/tab';
 
@@ -8,6 +8,7 @@ interface KeyMap{
   arrowup:string;
   arrowdown:string;
   space:string;
+  backspace:string;
 }
 
 @Component({
@@ -32,7 +33,8 @@ export class TabComponent implements OnInit {
     arrowleft:'arrowleft',
     arrowup:'arrowup',
     arrowdown:'arrowdown',
-    space:'space'
+    space:'space',
+    backspace:'backspace'
   };
   defaultNoteNum:number = 20;
   /**
@@ -41,23 +43,36 @@ export class TabComponent implements OnInit {
   isNoteView:boolean = false;
   selectedString:number = 0;
   selectedNote:number = 0;
+  tabIsSelected:boolean = false;
+  numberIdentifiers:string[] = ['numpad','digit'];
   /**
    * 
    * @param event handle keyboard controls
    */
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
-    let key = event.code.toLowerCase();
-    //console.log(event.code);
-    if(this.keyMap[key]){
-      console.log(key);
+    const key = event.code.toLowerCase();
+    console.log(key);
+    const isNum = this.numberIdentifiers.find(indentifier => {
+      return key.includes(indentifier);
+    });
+    if((this.keyMap[key] || isNum) && this.tabIsSelected){
+      //console.log(key);
       if(key.includes('arrow')){
         this.handleArrowKeys(key)
+      }
+      else if(isNum){
+        this.handleNumberPressed(key);
+      }
+      else if(key === this.keyMap.backspace){
+        this.handleDeletePress();
       }
     }
   }
 
-  constructor() { }
+  constructor(
+    private ref: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     if(!this.selectedTab){
@@ -72,42 +87,86 @@ export class TabComponent implements OnInit {
       console.log(this.selectedTab);
     }
   }
-
+  /**
+   * handle cursor highlighting when arrow keys pressed
+   * @param key string name for key pressed
+   */
   handleArrowKeys(key:string){
-    if(key === this.keyMap.arrowdown){
-      let maxString = this.selectedTab.strings.length - 1;
-      if(this.selectedString === maxString){
-        this.selectedString = maxString;
+    try{
+      if(key === this.keyMap.arrowdown){
+        let maxString = this.selectedTab.strings.length - 1;
+        if(this.selectedString === maxString){
+          this.selectedString = maxString;
+        }
+        else{
+          this.selectedString += 1;
+        }
       }
-      else{
-        this.selectedString += 1;
+      else if(key === this.keyMap.arrowup){
+        if(this.selectedString === 0){
+          this.selectedString = 0
+        }
+        else{
+          this.selectedString = this.selectedString - 1;
+        }
       }
+      else if(key === this.keyMap.arrowleft){
+        if(this.selectedNote === 0){
+          this.selectedNote = 0
+        }
+        else{
+          this.selectedNote = this.selectedNote - 1;
+        }
+      }
+      else if(key === this.keyMap.arrowright){
+        let maxNote = this.selectedTab.strings[0].notes.length - 1;
+        if(this.selectedNote === maxNote){
+          this.selectedNote = maxNote;
+        }
+        else{
+          this.selectedNote += 1;
+        }
+      }
+      console.log(this.selectedString,this.selectedNote);
     }
-    else if(key === this.keyMap.arrowup){
-      if(this.selectedString === 0){
-        this.selectedString = 0
-      }
-      else{
-        this.selectedString = this.selectedString - 1;
-      }
+    catch(e){
+      console.warn('error setting cursor: ',e);
     }
-    else if(key === this.keyMap.arrowleft){
-      if(this.selectedNote === 0){
-        this.selectedNote = 0
-      }
-      else{
-        this.selectedNote = this.selectedNote - 1;
-      }
+  }
+  /**
+   * take the passed number key and assign number to selected note/fret
+   * @param key numpad or digit key string
+   */
+  handleNumberPressed(key:string){
+    try{
+      let numRegex = /\d{1}/g;
+      let number = key.match(numRegex);
+      let selectedNote = this.selectedTab.strings[this.selectedString].notes[this.selectedNote];
+      selectedNote.fretNumber = Number(number);
+      this.selectedTab.strings[this.selectedString].notes[this.selectedNote] = selectedNote;
+      console.log(this.selectedString,this.selectedNote);
     }
-    else if(key === this.keyMap.arrowright){
-      let maxNote = this.selectedTab.strings[0].notes.length - 1;
-      if(this.selectedNote === maxNote){
-        this.selectedNote = maxNote;
-      }
-      else{
-        this.selectedNote += 1;
-      }
+    catch(e){
+      console.warn('error setting note: ',e);
     }
   }
 
+  handleDeletePress(){
+    let selectedNote = this.selectedTab.strings[this.selectedString].notes[this.selectedNote];
+    selectedNote.fretNumber = null;
+    this.selectedTab.strings[this.selectedString].notes[this.selectedNote] = selectedNote;
+  }
+
+  tabSelected(){
+    this.tabIsSelected = true;
+  }
+
+  tabBlurred(){
+    this.tabIsSelected = false;
+  }
+
+  selectFret(stringIndex:number,fretIndex:number){
+    this.selectedString = stringIndex;
+    this.selectedNote = fretIndex;
+  }
 }
