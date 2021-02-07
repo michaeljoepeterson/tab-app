@@ -1,1 +1,34 @@
-<p>tab works!</p>
+<ng-container *ngIf="selectedTab">
+    <div class="tab-container">
+        <ng-container *ngFor="let instrumentString of selectedTab.strings;let stringIndex = index">
+            <div class="string-container">
+                <div class="string-name">
+                    <span class="name">
+                        {{instrumentString.stringName}}
+                    </span>
+                    <span>
+                        |
+                    </span>
+                </div>
+                <ng-container *ngFor="let note of instrumentString.notes; let noteIndex = index">
+                    <ng-container *ngIf="note.fretNumber || note.fretNumber === 0"> 
+                        <div [ngClass]="{
+                            'highlighted':stringIndex === selectedString && noteIndex === selectedNote,
+                            'note':true
+                        }">
+                            {{note.fretNumber}}
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="!note.fretNumber">
+                        <div [ngClass]="{
+                            'highlighted':stringIndex === selectedString && noteIndex === selectedNote,
+                            'note':true
+                        }">
+                            -
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+</ng-container>

@@ -1,0 +1,31 @@
+.string-container{
+    display: flex;
+    font-size: 1.5em;
+}
+
+.string-name > .name{
+    min-width: 19px;
+    display: inline-block;
+}
+
+.note:hover{
+    cursor: pointer;
+}
+
+.note.highlighted{
+    animation-name: highlighted;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes highlighted{
+    0%{
+        background-color: none;
+    }
+    50%{
+        background-color: rgba(0,0,0,0.5);
+    }
+    100%{
+        background-color: rgba(0,0,0,1);
+    }
+}

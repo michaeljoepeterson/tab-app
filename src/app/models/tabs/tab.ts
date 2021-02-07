@@ -1,4 +1,4 @@
-import { InstrumentString } from "./string";
+import { InstrumentString } from "./instrumentString";
 
 export class Tab{
     TabName:string = null;
@@ -7,12 +7,18 @@ export class Tab{
     constructor(){
         
     }
-
-    initGuitarTab(){
+    /**
+     * init a basic guitar tab with optional number of notes
+     * @param noteCount optional number of notes to init
+     */
+    initGuitarTab(noteCount?:number){
+        noteCount = noteCount ? noteCount : 20;
         let guitarStrings = ['E','A','D','G','B','e'];
         this.TabName = 'My Guitar Tab';
         this.strings = guitarStrings.map(stringName => {
-            return new InstrumentString(stringName);
+            let string = new InstrumentString(stringName);
+            string.initEmptyNotes(noteCount);
+            return string;
         });
     }
 
