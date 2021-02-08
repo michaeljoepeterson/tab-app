@@ -150,11 +150,20 @@ export class TabComponent implements OnInit {
       console.warn('error setting note: ',e);
     }
   }
-
+  /**
+   * delete currentyl highlighted note
+   */
   handleDeletePress(){
     let selectedNote = this.selectedTab.strings[this.selectedString].notes[this.selectedNote];
     selectedNote.fretNumber = null;
     this.selectedTab.strings[this.selectedString].notes[this.selectedNote] = selectedNote;
+  }
+
+  /**
+   * add space to all strings at index selected
+   */
+  handleSpacePress(){
+
   }
 
   tabSelected(){
