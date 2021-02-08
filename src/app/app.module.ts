@@ -9,25 +9,28 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { AppRoutingModule } from './app-routing.module';
-import { Page1Component } from './components/pages/page1/page1.component';
-import { Page2Component } from './components/pages/page2/page2.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { TabViewerComponent } from './components/pages/tab-viewer/tab-viewer.component';
 import { TabComponent } from './components/sub-components/tabs/tab/tab.component';
-import { NoteComponent } from './components/sub-components/tabs/note/note.component';
-import { StringComponent } from './components/sub-components/tabs/string/string.component';
+import { UserLoginComponent } from './components/sub-components/user-login/user-login.component';
+import {fbConfig} from './firebase-config';
+import { AngularFireModule } from "@angular/fire";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import {AuthService} from './services/auth-service.service';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import { CreateTabComponent } from './components/pages/create-tab/create-tab.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    Page1Component,
-    Page2Component,
     NotFoundComponent,
     TabViewerComponent,
     TabComponent,
-    NoteComponent,
-    StringComponent
+    UserLoginComponent,
+    CreateTabComponent
   ],
   imports: [
     BrowserModule,
@@ -36,9 +39,14 @@ import { StringComponent } from './components/sub-components/tabs/string/string.
     MatIconModule,
     MatButtonModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFireModule.initializeApp(fbConfig),
+    AngularFireAuthModule,
+    AngularFirestoreModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

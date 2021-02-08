@@ -48,6 +48,8 @@ Thumbs.db
 .firebaserc
 .firebase
 
+firebase-config
 firebase-config.js
+firebase-config.ts
 
 debug.log
