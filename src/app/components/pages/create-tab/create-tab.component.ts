@@ -1,26 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { AuthInfo } from 'src/app/models/users/authInfoInterface';
 import {AuthService} from '../../../services/auth-service.service';
 
 @Component({
   selector: 'app-create-tab',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './create-tab.component.html',
   styleUrls: ['./create-tab.component.css']
 })
 export class CreateTabComponent implements OnInit {
   currentToken:string = null;
   subscribers:Subscription[] = [];
+  tokenObservable:Observable<AuthInfo> = new Observable(null);
 
   constructor(
-    private authService:AuthService
+    private authService:AuthService,
+    private ref:ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    let tokenSub = this.authService.currentToken.subscribe(token => {
-      this.currentToken = token;
-      console.log(this.currentToken);
-    });
-    this.subscribers.push(tokenSub);
+    this.tokenObservable = this.checkToken();
   }
 
   ngOnDestroy(){
@@ -30,5 +30,9 @@ export class CreateTabComponent implements OnInit {
     catch(e){
       console.warn('Error cleaning up: ',e);
     }
+  }
+
+  checkToken():Observable<AuthInfo>{
+    return this.authService.currentToken;
   }
 }

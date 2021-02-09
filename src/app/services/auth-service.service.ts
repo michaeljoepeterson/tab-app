@@ -2,32 +2,50 @@ import { Injectable } from '@angular/core';
 import 'firebase/auth';
 import firebase from 'firebase';
 import { AngularFireAuth } from "@angular/fire/auth";
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import {AuthInfo} from'../models/users/authInfoInterface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   googleAuthProvider:any;
-
-  private token:BehaviorSubject<string> = new BehaviorSubject(null);
+  /**
+   * @token - start with null value to allow for loading check by checking if value is null
+   */
+  private token:BehaviorSubject<AuthInfo> = new BehaviorSubject(null);
   currentToken = this.token.asObservable();
 
   constructor(
     public afAuth: AngularFireAuth
   ) {
     this.googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-    this.afAuth.authState.subscribe(async (user) => {
-      console.log(user);
-      let token = null;
-      if(user){
-        token = await user.getIdToken();
-      }
-      this.token.next(token);
+    this.afAuth.authState.pipe(
+      switchMap(user => {
+        //console.log('user: ',user);
+        let token = null;
+        if(user){
+          return user.getIdToken();
+        }
+        else{
+          return of(token)
+        }
+      })
+      ).subscribe((token) => {
+        this.token.next({token});
     });
   }
 
   googleSignIn():Observable<any>{
-    return from(this.afAuth.signInWithPopup(this.googleAuthProvider))
+    return from(this.afAuth.signInWithPopup(this.googleAuthProvider));
+  }
+
+  logout():Observable<any>{
+    return from(this.afAuth.signOut());
+  }
+
+  getToken():string{
+    return this.token.value.token;
   }
 }

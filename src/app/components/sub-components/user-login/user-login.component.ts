@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {AuthService} from '../../../services/auth-service.service';
 
 @Component({
   selector: 'app-user-login',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './user-login.component.html',
   styleUrls: ['./user-login.component.css']
 })
@@ -17,14 +18,16 @@ export class UserLoginComponent implements OnInit {
 
   
   googleSignIn(){
-    this.authService.googleSignIn().subscribe({
+    let sub = this.authService.googleSignIn().subscribe({
       next:response => {
-        console.log('response: ',response);
+        sub.unsubscribe();
+        //console.log('response: ',response);
       },
       error:err => {
+        sub.unsubscribe();
         console.warn('error logging in: ',err);
       }
-    })
+    });
   }
 
 }

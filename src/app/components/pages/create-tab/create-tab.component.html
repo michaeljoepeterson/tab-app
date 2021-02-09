@@ -1,6 +1,8 @@
-<ng-container *ngIf="currentToken">
-
-</ng-container>
-<ng-container *ngIf="!currentToken">
-    <app-user-login></app-user-login>
+<ng-container *ngIf="tokenObservable | async as token">
+    <ng-container *ngIf="token  && token.token">
+        <p>has token</p>
+    </ng-container>
+    <ng-container *ngIf="(!token.token) && token !== null">
+        <app-user-login></app-user-login>
+    </ng-container>
 </ng-container>
