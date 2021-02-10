@@ -3,6 +3,7 @@
         <p>has token</p>
     </ng-container>
     <ng-container *ngIf="(!token.token) && token !== null">
+        <app-tab-viewer></app-tab-viewer>
         <app-user-login></app-user-login>
     </ng-container>
 </ng-container>

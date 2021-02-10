@@ -1,18 +1,55 @@
 <div class="form-container">
-    <form class="flex-form">
-        <mat-form-field>
-            <mat-label>Email</mat-label>
-            <input matInput placeholder="someone@email.com"/>
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Password</mat-label>
-            <input matInput type="password"/>
-        </mat-form-field>
-        <div>
-            <button mat-raised-button color="primary">Login</button>
-        </div>
-        <div>
-            <button type="button" (click)="googleSignIn()" mat-raised-button color="primary">Google Login</button>
-        </div>
-    </form>
+    <div class="inner-contianer">
+        <ng-container *ngIf="!isCreatingUser">
+            <form class="flex-form">
+                <h4 class="form-header">Create an account or login to create and save your own tabs</h4>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input type="email" matInput placeholder="someone@email.com"/>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Password</mat-label>
+                    <input type="password" matInput type="password"/>
+                </mat-form-field>
+                <div class="form-button-container">
+                    <button type="button" mat-raised-button color="primary">Login</button>
+                </div>
+                <div class="form-button-container">
+                    <button type="button" (click)="displayCreate(true)" mat-raised-button color="primary">Create Account</button>
+                </div>
+                <div class="form-button-container">
+                    <button type="button" (click)="googleSignIn()" mat-raised-button color="primary">Google Login</button>
+                </div>
+            </form>
+        </ng-container>
+        <ng-container *ngIf="isCreatingUser">
+            <form class="flex-form">
+                <mat-form-field>
+                    <mat-label>Username</mat-label>
+                    <input matInput placeholder="someone@email.com"/>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Email</mat-label>
+                    <input type="email" matInput placeholder="someone@email.com"/>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Password</mat-label>
+                    <input type="password" matInput type="password"/>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Confirm Password</mat-label>
+                    <input type="password" matInput type="password"/>
+                </mat-form-field>
+                <div class="form-button-container">
+                    <button type="button" (click)="displayCreate(false)"  mat-raised-button color="primary">Login</button>
+                </div>
+                <div class="form-button-container">
+                    <button type="button" mat-raised-button color="primary">Create Account</button>
+                </div>
+                <div class="form-button-container">
+                    <button type="button" (click)="googleSignIn()" mat-raised-button color="primary">Google Login</button>
+                </div>
+            </form>
+        </ng-container>
+    </div>
 </div>

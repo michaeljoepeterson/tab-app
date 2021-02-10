@@ -21,6 +21,7 @@ import {AuthService} from './services/auth-service.service';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { CreateTabComponent } from './components/pages/create-tab/create-tab.component';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { CreateTabComponent } from './components/pages/create-tab/create-tab.com
     AngularFireAuthModule,
     AngularFirestoreModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatSnackBarModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

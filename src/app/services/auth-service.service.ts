@@ -3,7 +3,7 @@ import 'firebase/auth';
 import firebase from 'firebase';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { BehaviorSubject, from, Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap,map } from 'rxjs/operators';
 import {AuthInfo} from'../models/users/authInfoInterface';
 
 @Injectable({
@@ -23,9 +23,9 @@ export class AuthService {
     this.googleAuthProvider = new firebase.auth.GoogleAuthProvider();
     this.afAuth.authState.pipe(
       switchMap(user => {
-        //console.log('user: ',user);
         let token = null;
         if(user){
+          console.log('user: ',user.displayName);
           return user.getIdToken();
         }
         else{
@@ -38,7 +38,14 @@ export class AuthService {
   }
 
   googleSignIn():Observable<any>{
-    return from(this.afAuth.signInWithPopup(this.googleAuthProvider));
+    return from(this.afAuth.signInWithPopup(this.googleAuthProvider)).pipe(
+      map((result:any) => {
+        if(result){
+          console.log('create app user: ',result.user.email);
+        }
+        return result;
+      })
+    );
   }
 
   logout():Observable<any>{
@@ -47,5 +54,17 @@ export class AuthService {
 
   getToken():string{
     return this.token.value.token;
+  }
+
+  signInEmail(email:string,pass:string){
+    return from(this.afAuth.signInWithEmailAndPassword(email,pass))
+  }
+
+  createUserEmail(email:string,pass:string){
+    return from(this.afAuth.createUserWithEmailAndPassword(email,pass))
+  }
+
+  createAppUser(){
+
   }
 }

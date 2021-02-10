@@ -8,6 +8,14 @@ import {AuthService} from '../../../services/auth-service.service';
   styleUrls: ['./user-login.component.css']
 })
 export class UserLoginComponent implements OnInit {
+  email:string;
+  username:string;
+  loginPass:string;
+
+  createPass:string;
+  confirmPass:string;
+
+  isCreatingUser:boolean = false;
 
   constructor(
     private authService:AuthService
@@ -30,4 +38,22 @@ export class UserLoginComponent implements OnInit {
     });
   }
 
+  /**
+   * @displayCreate - toggle create form
+   */
+  displayCreate(isCreate:boolean){
+    this.isCreatingUser = isCreate;
+  }
+
+  createUser(){
+    let sub = this.authService.createUserEmail(this.email,this.createPass).subscribe({
+      next:response => {
+        sub.unsubscribe();
+      },
+      error:err =>{
+        sub.unsubscribe();
+        console.warn('Error creating account in',err);
+      }
+    })
+  }
 }
