@@ -1,50 +1,50 @@
 <div class="form-container">
     <div class="inner-contianer">
         <ng-container *ngIf="!isCreatingUser">
-            <form class="flex-form">
+            <form class="flex-form" (submit)="emailLogin($event)">
                 <h4 class="form-header">Create an account or login to create and save your own tabs</h4>
                 <mat-form-field>
                     <mat-label>Email</mat-label>
-                    <input type="email" matInput placeholder="someone@email.com"/>
+                    <input name="email" [(ngModel)]="email" type="email" required matInput placeholder="someone@email.com"/>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Password</mat-label>
-                    <input type="password" matInput type="password"/>
+                    <input name="loginPass" [(ngModel)]="loginPass" type="password" required matInput type="password"/>
                 </mat-form-field>
-                <div class="form-button-container">
-                    <button type="button" mat-raised-button color="primary">Login</button>
+                <div required class="form-button-container">
+                    <button type="submit" mat-raised-button color="primary">Login</button>
                 </div>
-                <div class="form-button-container">
+                <div required class="form-button-container">
                     <button type="button" (click)="displayCreate(true)" mat-raised-button color="primary">Create Account</button>
                 </div>
-                <div class="form-button-container">
+                <div required class="form-button-container">
                     <button type="button" (click)="googleSignIn()" mat-raised-button color="primary">Google Login</button>
                 </div>
             </form>
         </ng-container>
         <ng-container *ngIf="isCreatingUser">
-            <form class="flex-form">
-                <mat-form-field>
-                    <mat-label>Username</mat-label>
-                    <input matInput placeholder="someone@email.com"/>
-                </mat-form-field>
+            <form class="flex-form" (submit)="createUser($event)">
                 <mat-form-field>
                     <mat-label>Email</mat-label>
-                    <input type="email" matInput placeholder="someone@email.com"/>
+                    <input name="email" [(ngModel)]="email" required type="email" matInput placeholder="someone@email.com"/>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Username</mat-label>
+                    <input name="username" [(ngModel)]="username" required matInput />
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Password</mat-label>
-                    <input type="password" matInput type="password"/>
+                    <input name="createPass" [(ngModel)]="createPass" required type="password" matInput type="password"/>
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Confirm Password</mat-label>
-                    <input type="password" matInput type="password"/>
+                    <input name="confirmPass" [(ngModel)]="confirmPass" required type="password" matInput type="password"/>
                 </mat-form-field>
                 <div class="form-button-container">
                     <button type="button" (click)="displayCreate(false)"  mat-raised-button color="primary">Login</button>
                 </div>
                 <div class="form-button-container">
-                    <button type="button" mat-raised-button color="primary">Create Account</button>
+                    <button type="submit" mat-raised-button color="primary">Create Account</button>
                 </div>
                 <div class="form-button-container">
                     <button type="button" (click)="googleSignIn()" mat-raised-button color="primary">Google Login</button>

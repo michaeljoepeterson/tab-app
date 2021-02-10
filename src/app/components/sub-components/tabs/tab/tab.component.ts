@@ -51,21 +51,23 @@ export class TabComponent implements OnInit {
    */
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
-    const key = event.code.toLowerCase();
-    console.log(key);
-    const isNum = this.numberIdentifiers.find(indentifier => {
-      return key.includes(indentifier);
-    });
-    if((this.keyMap[key] || isNum) && this.tabIsSelected){
-      //console.log(key);
-      if(key.includes('arrow')){
-        this.handleArrowKeys(key)
-      }
-      else if(isNum){
-        this.handleNumberPressed(key);
-      }
-      else if(key === this.keyMap.backspace){
-        this.handleDeletePress();
+    if(event.code){
+      const key = event.code.toLowerCase();
+      console.log(key);
+      const isNum = this.numberIdentifiers.find(indentifier => {
+        return key.includes(indentifier);
+      });
+      if((this.keyMap[key] || isNum) && this.tabIsSelected){
+        //console.log(key);
+        if(key.includes('arrow')){
+          this.handleArrowKeys(key)
+        }
+        else if(isNum){
+          this.handleNumberPressed(key);
+        }
+        else if(key === this.keyMap.backspace){
+          this.handleDeletePress();
+        }
       }
     }
   }
