@@ -8,9 +8,12 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 })
 export class TabViewerComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    
+  ) { }
 
   ngOnInit(): void {
+    
   }
 
 }

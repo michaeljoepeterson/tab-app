@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * @NotificationsService - service meant to handle snack bars, popups,etc
@@ -10,6 +11,12 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 export class NotificationsService {
   defaultDuration:number = 4000;
   defaultAction:string = 'Close';
+  
+  _noScroll:BehaviorSubject<boolean> = new BehaviorSubject(false);
+  /**
+   * @noScroll - used to toggle html scroll for popups or overlays
+   */
+  noScroll = this._noScroll.asObservable();
 
   constructor(
     private _snackBar: MatSnackBar

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { Observable, Subscription } from 'rxjs';
 import { AuthInfo } from 'src/app/models/users/authInfoInterface';
 import {AuthService} from '../../../services/auth-service.service';
+import {TabService} from '../../../services/tab-service.service';
 
 @Component({
   selector: 'app-create-tab',
@@ -16,11 +17,25 @@ export class CreateTabComponent implements OnInit {
 
   constructor(
     private authService:AuthService,
-    private ref:ChangeDetectorRef
+    private ref:ChangeDetectorRef,
+    private tabService:TabService
   ) { }
 
   ngOnInit(): void {
     this.tokenObservable = this.checkToken();
+
+    let sub = this.tabService.getTest().subscribe({
+      next:response =>{
+        console.log('res',response);
+      },
+      error:err =>{
+        console.warn('error getting test: ',err);
+      },
+      complete:() => {
+        console.log('clean up');
+        sub.unsubscribe();
+      }
+    })
   }
 
   ngOnDestroy(){

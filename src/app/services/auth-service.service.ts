@@ -33,6 +33,7 @@ export class AuthService {
         }
       })
       ).subscribe((token) => {
+        //console.log(token)
         this.token.next({token});
     });
   }
@@ -53,7 +54,7 @@ export class AuthService {
   }
 
   getToken():string{
-    return this.token.value.token;
+    return this.token.value ? this.token.value.token : null;
   }
 
   signInEmail(email:string,pass:string){
