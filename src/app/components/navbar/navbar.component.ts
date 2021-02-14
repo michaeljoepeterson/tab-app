@@ -23,6 +23,17 @@ export class NavbarComponent implements OnInit {
       this.authInfo = auth;
       this.ref.markForCheck();
     });
+
+    this.subscriptions.push(sub);
+  }
+
+  ngOnDestroy(){
+    try{
+      this.subscriptions.forEach(sub => sub.unsubscribe());
+    }
+    catch(e){
+      console.warn('error cleaning up navbar ',e);
+    }
   }
 
   logout(){
