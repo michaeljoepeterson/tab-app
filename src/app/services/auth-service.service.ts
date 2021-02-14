@@ -34,7 +34,9 @@ export class AuthService {
       })
       ).subscribe((token) => {
         //console.log(token)
-        this.token.next({token});
+        let auth = new AuthInfo();
+        auth.token = token;
+        this.token.next(auth);
     });
   }
 

@@ -1,8 +1,10 @@
-<div class="main-container">
-  <div>
-    <app-navbar></app-navbar>
-  </div>
-  <div class="main-content">
-    <router-outlet></router-outlet>
-  </div>
-</div>
+<ng-container *ngIf="authInfo !== null && (authInfo.token || authInfo.token === null)">
+  <div class="main-container">
+    <div>
+      <app-navbar></app-navbar>
+    </div>
+      <div class="main-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+</ng-container>

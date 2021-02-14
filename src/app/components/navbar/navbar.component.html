@@ -8,6 +8,6 @@
       <mat-icon>favorite</mat-icon>
     </a>
     <button (click)="logout()" mat-button aria-label="Logout Button">
-      Logout
+      {{authInfo !== null && authInfo.token ? 'Logout' : 'Login'}}
     </button>
 </mat-toolbar>

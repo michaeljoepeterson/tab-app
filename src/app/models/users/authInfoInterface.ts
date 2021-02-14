@@ -1,3 +1,4 @@
-export interface AuthInfo{
+export class AuthInfo{
     token:string;
+    user:any = null;
 }

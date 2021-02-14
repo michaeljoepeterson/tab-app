@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { AuthInfo } from '../../models/users/authInfoInterface';
 import { AuthService } from '../../services/auth-service.service';
 
 @Component({
@@ -8,12 +10,19 @@ import { AuthService } from '../../services/auth-service.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  subscriptions:Subscription[];
+  authInfo:AuthInfo = null;
 
   constructor(
-    private authService:AuthService
+    private authService:AuthService,
+    private ref:ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+    let sub = this.authService.currentToken.subscribe(auth => {
+      this.authInfo = auth;
+      this.ref.markForCheck();
+    });
   }
 
   logout(){
