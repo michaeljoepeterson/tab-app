@@ -31,7 +31,7 @@ export class UserLoginComponent implements OnInit {
     let sub = this.authService.googleSignIn().subscribe({
       next:response => {
         sub.unsubscribe();
-        //console.log('response: ',response);
+        console.log('response: ',response);
       },
       error:err => {
         sub.unsubscribe();

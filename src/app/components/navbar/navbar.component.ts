@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth-service.service';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  subscriptions:Subscription[];
+  subscriptions:Subscription[] = [];
   authInfo:AuthInfo = null;
 
   constructor(
