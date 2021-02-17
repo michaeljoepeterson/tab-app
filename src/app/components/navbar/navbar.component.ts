@@ -21,6 +21,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     let sub = this.authService.currentToken.subscribe(auth => {
       this.authInfo = auth;
+      console.log(this.authInfo);
       this.ref.markForCheck();
     });
 

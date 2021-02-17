@@ -20,4 +20,13 @@ export class User{
             }
         })
     }
+
+    getJson(){
+        return {
+            email:this.email,
+            id:this.id,
+            role:this.role,
+            username:this.username
+        }
+    }
 }

@@ -59,7 +59,7 @@ export class UserLoginComponent implements OnInit {
       return;
     }
 
-    let sub = this.authService.createUserEmail(this.email,this.createPass).subscribe({
+    let sub = this.authService.createUserEmail(this.email,this.createPass,this.username).subscribe({
       next:response => {
         sub.unsubscribe();
       },
@@ -76,13 +76,15 @@ export class UserLoginComponent implements OnInit {
     event.preventDefault();
     let sub = this.authService.signInEmail(this.email,this.loginPass).subscribe({
       next:response => {
-        sub.unsubscribe();
+        console.log('response: ',response);
       },
       error:err =>{
         const message = 'Error signing in';
-        sub.unsubscribe();
         console.warn(message,err);
         this.notificationService.displayErrorSnackBar(message,err);
+      },
+      complete:() => {
+        sub.unsubscribe();
       }
     });
   }

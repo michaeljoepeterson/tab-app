@@ -58,6 +58,7 @@ export class AuthService {
           return of(null);
         }
       }),
+      //get possible user roles
       switchMap((response) => {
         //console.log(token)
         if(response && response.user){
@@ -80,36 +81,56 @@ export class AuthService {
   updateAuthUser(){
     
   }
-
+  /**
+   * login using google auth
+   */
   googleSignIn():Observable<any>{
     return from(this.afAuth.signInWithPopup(this.googleAuthProvider)).pipe(
       switchMap(async (result:any) => {
         if(result){
-          console.log('create app user: ',result.user.email);
           let token = await result.user.getIdToken();
-          return this.getAppUser(result.user.email,token)
+          return this.checkAppUser(result,token);
         }
         else{
           return of({});
         }
       }),
-      //swithcMap again to sub to getapp user, issues seens to be from 
       switchMap(response => {
         return response;
-      }),
-      map(response => {
-        console.log(response);
-        return new User(response.user);
       })
-      //create user if they don't exist
-      //may need to update token at end with created user to avoid race condition
     );
   }
-  //extract user checking into this function to make pipe reusable
-  checkAppUser(result:any):Observable<any>{
-    return of(null);
+  /**
+   * reusable app check to see if user exists only need to do this check on google auth
+   * @param result fb auth login result
+   * @param token string token
+   */
+  checkAppUser(result:any,token?:string):Observable<any>{
+    let res = null;
+    return this.getAppUser(result.user.email,token).pipe(
+      map((response:any) => {
+        res = response;
+        return new User(response.user);
+      }),
+      switchMap((user:User) => {
+        if(user.email){
+          return of(user);
+        }
+        else{
+          return this.createAppUser(result.user.displayName,result.user.email,null,token);
+        }
+      }),
+      map(user => {
+        let currentAuth = {...this.token.value};
+        currentAuth.user = user;
+        this.token.next(currentAuth);
+        return user;
+      })
+    );
   }
-
+  /**
+   *@logout logout current user
+   */
   logout():Observable<any>{
     return from(this.afAuth.signOut());
   }
@@ -117,13 +138,30 @@ export class AuthService {
   getToken():string{
     return this.token.value ? this.token.value.token : null;
   }
-
+  /**
+   * sign in using email and password auth
+   * @param email 
+   * @param pass 
+   */
   signInEmail(email:string,pass:string){
     return from(this.afAuth.signInWithEmailAndPassword(email,pass))
   }
 
-  createUserEmail(email:string,pass:string){
-    return from(this.afAuth.createUserWithEmailAndPassword(email,pass))
+  createUserEmail(email:string,pass:string,username:string){
+    return from(this.afAuth.createUserWithEmailAndPassword(email,pass)).pipe(
+      switchMap(async (result:any) => {
+        if(result){
+          let token = await result.user.getIdToken();
+          return this.createAppUser(username,email,null,token);
+        }
+        else{
+          return of({});
+        }
+      }),
+      switchMap(response => {
+        return response;
+      })
+    )
   }
   /**
    * get a app user based off current credentials
@@ -145,8 +183,24 @@ export class AuthService {
    * create a app user optionally pass a role to add for the user
    * @param role optional role string for
    */
-  createAppUser(role?:string){
-
+  createAppUser(username:string,email:string,level?:number,token?:string):Observable<any>{
+    level = level ? level : 4;
+    let foundRole = this.roles.find(role => role.level === level);
+    let headers = new HttpHeaders();
+    token = token ? token : this.getToken();
+    headers = headers.append('authtoken',token);
+    headers.append('Content-Type', 'application/json');
+    let options = {
+      headers:headers
+    };
+    let user = new User({
+      username,
+      email,
+      role:foundRole.id
+    });
+    let userJson = user.getJson();
+    let url = `${environment.apiUrl}users`;
+    return this.http.post(url,userJson,options);
   }
 
   /**

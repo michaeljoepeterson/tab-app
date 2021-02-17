@@ -1,6 +1,7 @@
 <ng-container *ngIf="tokenObservable | async as token">
     <ng-container *ngIf="token  && token.token">
         <p>has token</p>
+        <p>{{token.user.username}}</p>
     </ng-container>
     <ng-container *ngIf="(!token.token) && token !== null">
         <app-tab-viewer></app-tab-viewer>
