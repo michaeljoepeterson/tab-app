@@ -31,9 +31,7 @@ export class AuthService {
     private http: HttpClient,
     public afAuth: AngularFireAuth
   ) {
-    //placeholder until roles get setup only get <= 2 roles
-    let testRole = new Role({id:"6026a384b35ef1000ae34101",name:"User"});
-    this.roles.push(testRole);
+    
     this.googleAuthProvider = new firebase.auth.GoogleAuthProvider();
     this.afAuth.authState.pipe(
       //wait for current user and get token
@@ -59,13 +57,22 @@ export class AuthService {
         else{
           return of(null);
         }
-      })
-      ).subscribe((response) => {
+      }),
+      switchMap((response) => {
         //console.log(token)
         if(response && response.user){
           this.tempAuth.user = new User(response.user);
         }
+        if(!this.roles || this.roles.length === 0){
+          return this.getRoles();
+        }
+        else{
+          return of(null);
+        }
+      })
+      ).subscribe((response) => {
         this.token.next({...this.tempAuth});
+        console.log(this.roles);
         this.tempAuth = null;
     });
   }
@@ -97,6 +104,10 @@ export class AuthService {
       //create user if they don't exist
       //may need to update token at end with created user to avoid race condition
     );
+  }
+  //extract user checking into this function to make pipe reusable
+  checkAppUser(result:any):Observable<any>{
+    return of(null);
   }
 
   logout():Observable<any>{
@@ -130,7 +141,24 @@ export class AuthService {
     return this.http.get(url,options);
   }
 
-  createAppUser(){
+  /**
+   * create a app user optionally pass a role to add for the user
+   * @param role optional role string for
+   */
+  createAppUser(role?:string){
 
+  }
+
+  /**
+   * @getRoles get client facing roles
+   */
+  getRoles():Observable<Role[]>{
+    let url = `${environment.apiUrl}roles`;
+    return this.http.get(url).pipe(map((response:any) => {
+      if(response && response.roles){
+        this.roles = response.roles.map(role => new Role(role));
+      }
+      return response;
+    }));
   }
 }
