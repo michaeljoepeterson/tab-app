@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { Subscription } from 'rxjs';
 import { AuthInfo } from '../../models/users/authInfoInterface';
 import { AuthService } from '../../services/auth-service.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { UserLoginComponent } from '../sub-components/user-login/user-login.component';
 
 @Component({
   selector: 'app-navbar',
@@ -12,16 +14,20 @@ import { AuthService } from '../../services/auth-service.service';
 export class NavbarComponent implements OnInit {
   subscriptions:Subscription[] = [];
   authInfo:AuthInfo = null;
+  loginModal:MatDialogRef<any,any> = null;
 
   constructor(
     private authService:AuthService,
-    private ref:ChangeDetectorRef
+    private ref:ChangeDetectorRef,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
     let sub = this.authService.currentToken.subscribe(auth => {
       this.authInfo = auth;
-      console.log(this.authInfo);
+      if(this.loginModal){
+        this.loginModal.close();
+      }
       this.ref.markForCheck();
     });
 
@@ -49,4 +55,7 @@ export class NavbarComponent implements OnInit {
     })
   }
 
+  opneLoginModal(){
+    this.loginModal = this.dialog.open(UserLoginComponent);
+  }
 }

@@ -12,8 +12,9 @@ import {TabService} from '../../../services/tab-service.service';
 })
 export class CreateTabComponent implements OnInit {
   currentToken:string = null;
-  subscribers:Subscription[] = [];
+  subscriptions:Subscription[] = [];
   tokenObservable:Observable<AuthInfo> = new Observable(null);
+  authInfo:AuthInfo = null;
 
   constructor(
     private authService:AuthService,
@@ -23,6 +24,13 @@ export class CreateTabComponent implements OnInit {
 
   ngOnInit(): void {
     this.tokenObservable = this.checkToken();
+
+    let authSub = this.authService.currentToken.subscribe(auth => {
+      this.authInfo = auth;
+      this.ref.markForCheck();
+    });
+
+    this.subscriptions.push(authSub);
 
     let sub = this.tabService.getTest().subscribe({
       next:response =>{
@@ -40,7 +48,7 @@ export class CreateTabComponent implements OnInit {
 
   ngOnDestroy(){
     try{
-      this.subscribers.forEach(sub => sub.unsubscribe());
+      this.subscriptions.forEach(sub => sub.unsubscribe());
     }
     catch(e){
       console.warn('Error cleaning up: ',e);

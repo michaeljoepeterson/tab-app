@@ -1,13 +1,23 @@
 <mat-toolbar>
-    <a routerLink="/home" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <a routerLink="/home" mat-icon-button class="example-icon" aria-label="open navbar menu">
       <mat-icon>menu</mat-icon>
     </a>
     <span>My App</span>
     <span class="example-spacer"></span>
-    <a routerLink="/create-tab" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>favorite</mat-icon>
+    <ng-container *ngIf="authInfo !== null && authInfo.token">
+        <span>{{authInfo.user.username}}</span>
+    </ng-container>
+    <a routerLink="/create-tab" mat-icon-button aria-label="Create a new tab" matTooltip="Create a new tab">
+      <mat-icon>add</mat-icon>
     </a>
-    <button (click)="logout()" mat-button aria-label="Logout Button">
-      {{authInfo !== null && authInfo.token ? 'Logout' : 'Login'}}
-    </button>
+    <ng-container *ngIf="authInfo !== null && authInfo.token">
+      <button (click)="logout()" mat-button aria-label="Logout Button">
+        Logout
+      </button>
+    </ng-container>
+    <ng-container *ngIf="authInfo === null || !authInfo.token">
+      <button (click)="opneLoginModal()" mat-button aria-label="Login Button">
+        Login
+      </button>
+    </ng-container>
 </mat-toolbar>

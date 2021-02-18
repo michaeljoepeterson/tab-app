@@ -13,7 +13,7 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
 import { TabViewerComponent } from './components/pages/tab-viewer/tab-viewer.component';
 import { TabComponent } from './components/sub-components/tabs/tab/tab.component';
 import { UserLoginComponent } from './components/sub-components/user-login/user-login.component';
-import {fbConfig} from './firebase-config';
+import { fbConfig } from './firebase-config';
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFirestoreModule } from '@angular/fire/firestore';
@@ -23,6 +23,8 @@ import { MatInputModule } from '@angular/material/input';
 import { CreateTabComponent } from './components/pages/create-tab/create-tab.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -48,9 +50,14 @@ import { FormsModule } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
-    FormsModule
+    FormsModule,
+    MatDialogModule,
+    MatTooltipModule
   ],
   providers: [AuthService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[
+    UserLoginComponent
+  ]
 })
 export class AppModule { }
