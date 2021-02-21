@@ -209,7 +209,7 @@ export class TabComponent implements OnInit {
       
     }
     else{
-      this.selectedTab.addNotes();
+      this.selectedTab.insertNotes(this.selectedNote);
       this.ref.markForCheck();
       console.log(this.selectedTab);
       //this.moveCursor(this.right);

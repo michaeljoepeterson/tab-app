@@ -26,6 +26,12 @@ export class Tab{
         
     }
 
+    insertNotes(index:number){
+        this.strings.forEach(instrumentString => {
+            instrumentString.insertNote(index);
+        });
+    }
+
     addNotes(numNotes?:number){
         numNotes = numNotes ? numNotes : 1;
         this.strings.forEach(instrumentString => {
