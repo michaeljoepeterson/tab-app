@@ -84,6 +84,7 @@ export class TabComponent implements OnInit {
           this.handleDeletePressed();
         }
         else if(key === this.keyMap.space){
+          event.preventDefault();
           this.handleSpacePress();
         }
       }
@@ -209,6 +210,8 @@ export class TabComponent implements OnInit {
     }
     else{
       this.selectedTab.addNotes();
+      this.ref.markForCheck();
+      console.log(this.selectedTab);
       //this.moveCursor(this.right);
     }
   }
@@ -217,9 +220,8 @@ export class TabComponent implements OnInit {
    * add space to all strings at index selected
    */
   handleDeletePressed(){
-    let selectedNote = this.getSelectedNote();
-    selectedNote.fretNumber = null;
-    this.setSelectedNote(selectedNote);
+    this.selectedTab.removeNotes(this.selectedNote);
+    this.ref.markForCheck();
   }
 
   tabSelected(){

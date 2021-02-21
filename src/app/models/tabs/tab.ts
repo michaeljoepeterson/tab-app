@@ -28,6 +28,14 @@ export class Tab{
 
     addNotes(numNotes?:number){
         numNotes = numNotes ? numNotes : 1;
+        this.strings.forEach(instrumentString => {
+            instrumentString.addNote(numNotes);
+        });
+    }
 
+    removeNotes(index:number){
+        this.strings.forEach(instrumentString => {
+            instrumentString.removeNote(index);
+        });
     }
 }
