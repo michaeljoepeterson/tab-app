@@ -24,6 +24,10 @@
     animation-iteration-count: infinite;
 }
 
+.tab-title{
+    margin: 0.5em 0;
+}
+
 @keyframes highlighted{
     0%{
         background-color: none;

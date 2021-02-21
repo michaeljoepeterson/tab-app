@@ -1,5 +1,6 @@
 <ng-container *ngIf="selectedTab">
     <div class="tab-container" (focus)="tabSelected()" (blur)="tabBlurred()" tabindex="1">
+        <h3 class="tab-title">{{selectedTab.tabName}}</h3>
         <ng-container *ngFor="let instrumentString of selectedTab.strings;let stringIndex = index">
             <div class="string-container">
                 <div class="string-name">

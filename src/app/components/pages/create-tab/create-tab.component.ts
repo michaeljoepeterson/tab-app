@@ -3,7 +3,9 @@ import { Observable, Subscription } from 'rxjs';
 import { AuthInfo } from 'src/app/models/users/authInfoInterface';
 import {AuthService} from '../../../services/auth-service.service';
 import {TabService} from '../../../services/tab-service.service';
-
+/**
+ * used for creating and editing tabs
+ */
 @Component({
   selector: 'app-create-tab',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +17,7 @@ export class CreateTabComponent implements OnInit {
   subscriptions:Subscription[] = [];
   tokenObservable:Observable<AuthInfo> = new Observable(null);
   authInfo:AuthInfo = null;
+  selectedTab:any = null;
 
   constructor(
     private authService:AuthService,
