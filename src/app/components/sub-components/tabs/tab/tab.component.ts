@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { InstrumentString } from '../../../../models/tabs/instrumentString';
 import { Note } from '../../../../models/tabs/note';
 import { Tab } from '../../../../models/tabs/tab';
@@ -26,6 +26,8 @@ export class TabComponent implements OnInit {
    */
   @Input() strings:InstrumentString[] = [];
   @Input() instrumentType:string = 'guitar';
+
+  @ViewChild('refNote') refNote:ElementRef; 
 
   //directions for cursor
   up:string = 'up';
@@ -57,6 +59,11 @@ export class TabComponent implements OnInit {
   tabIsSelected:boolean = false;
   numberIdentifiers:string[] = ['numpad','digit'];
   /**
+   * @measures to ensure the tabs do not go beyond view width, use to construct measures
+   * sourced from selected tab
+   */
+  measures:InstrumentString[];
+  /**
    * 
    * @param event handle keyboard controls
    */
@@ -64,7 +71,7 @@ export class TabComponent implements OnInit {
   handleKeyboardEvent(event: KeyboardEvent) { 
     if(event.code){
       const key = event.code.toLowerCase();
-      console.log(key);
+      //console.log(key);
       const isNum = this.numberIdentifiers.find(indentifier => {
         return key.includes(indentifier);
       });
@@ -107,7 +114,16 @@ export class TabComponent implements OnInit {
       this.selectedTab.initGuitarTab(this.defaultNoteNum);
       console.log(this.selectedTab);
     }
+
+    this.buildMeasures();
   }
+
+  buildMeasures(){
+    const windowWidth = window.innerWidth;
+    console.log(windowWidth);
+    //this.refNote
+  }
+
   /**
    * handle moving cursor
    * @param direction string direction to move the cursor
@@ -167,7 +183,6 @@ export class TabComponent implements OnInit {
       else if(key === this.keyMap.arrowright){
         this.moveCursor(this.right);
       }
-      console.log(this.selectedString,this.selectedNote);
     }
     catch(e){
       console.warn('error setting cursor: ',e);
@@ -210,8 +225,6 @@ export class TabComponent implements OnInit {
     }
     else{
       this.selectedTab.insertNotes(this.selectedNote);
-      this.ref.markForCheck();
-      console.log(this.selectedTab);
       //this.moveCursor(this.right);
     }
   }
@@ -221,7 +234,6 @@ export class TabComponent implements OnInit {
    */
   handleDeletePressed(){
     this.selectedTab.removeNotes(this.selectedNote);
-    this.ref.markForCheck();
   }
 
   tabSelected(){

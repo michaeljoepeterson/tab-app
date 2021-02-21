@@ -1,3 +1,8 @@
+.tab-container{
+    max-width: 97vw;
+    overflow: hidden;
+}
+
 .string-container{
     display: flex;
     font-size: 1.5em;
@@ -26,6 +31,11 @@
 
 .tab-title{
     margin: 0.5em 0;
+}
+
+.measure{
+    max-width: 97vw;
+    overflow: hidden;
 }
 
 @keyframes highlighted{

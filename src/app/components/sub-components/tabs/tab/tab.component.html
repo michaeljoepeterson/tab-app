@@ -1,6 +1,6 @@
 <ng-container *ngIf="selectedTab">
+    <h3 class="tab-title">{{selectedTab.tabName}}</h3>
     <div class="tab-container" (focus)="tabSelected()" (blur)="tabBlurred()" tabindex="1">
-        <h3 class="tab-title">{{selectedTab.tabName}}</h3>
         <ng-container *ngFor="let instrumentString of selectedTab.strings;let stringIndex = index">
             <div class="string-container">
                 <div class="string-name">
@@ -13,12 +13,22 @@
                 </div>
                 <ng-container *ngFor="let note of instrumentString.notes; let noteIndex = index">
                     <ng-container *ngIf="note.fretNumber || note.fretNumber === 0"> 
-                        <div [ngClass]="{
-                            'highlighted':stringIndex === selectedString && noteIndex === selectedNote,
-                            'note':true
-                        }" (click)="selectFret(stringIndex,noteIndex)">
-                            {{note.fretNumber}}
-                        </div>
+                        <ng-container *ngIf="noteIndex === 0">
+                            <div #refNote [ngClass]="{
+                                'highlighted':stringIndex === selectedString && noteIndex === selectedNote,
+                                'note':true
+                            }" (click)="selectFret(stringIndex,noteIndex)">
+                                {{note.fretNumber}}
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="noteIndex !== 0">
+                            <div [ngClass]="{
+                                'highlighted':stringIndex === selectedString && noteIndex === selectedNote,
+                                'note':true
+                            }" (click)="selectFret(stringIndex,noteIndex)">
+                                {{note.fretNumber}}
+                            </div>
+                        </ng-container>
                     </ng-container>
                     <ng-container *ngIf="!note.fretNumber && note.fretNumber !== 0">
                         <div [ngClass]="{

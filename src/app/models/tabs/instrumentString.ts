@@ -34,6 +34,11 @@ export class InstrumentString{
     }
 
     insertNote(index:number){
-        this.notes.splice(index,0,new Note());
+        if(index === this.notes.length - 1){
+            this.addNote();
+        }
+        else{
+            this.notes.splice(index,0,new Note());
+        }
     }
 }
