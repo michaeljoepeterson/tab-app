@@ -32,6 +32,8 @@ export class TabComponent implements OnInit {
 
   @ViewChild('refNote') refNote:ElementRef;
 
+  noteWidth:number = 14;
+
   subscriptions:Subscription[] = [];
 
   //directions for cursor
@@ -67,7 +69,7 @@ export class TabComponent implements OnInit {
    * @measures to ensure the tabs do not go beyond view width, use to construct measures
    * sourced from selected tab
    */
-  measures:InstrumentString[];
+  measures:Array<InstrumentString[]> = [];
   /**
    * 
    * @param event handle keyboard controls
@@ -111,6 +113,7 @@ export class TabComponent implements OnInit {
   ngOnInit(): void {
     let tabSub = this.tabService.selectedTab.subscribe(tab => {
       this.selectedTab = tab;
+      console.log(this.selectedTab);
       this.buildMeasures();
     });
 
@@ -127,8 +130,20 @@ export class TabComponent implements OnInit {
   }
 
   buildMeasures(){
-    const windowWidth = window.innerWidth;
-    console.log(windowWidth);
+    const maxMeasureWidth = window.innerWidth * .9;
+    const noteWidth = this.refNote ? this.refNote.nativeElement.offsetWidth : this.noteWidth;
+    let currentNoteWidth = noteWidth * this.selectedTab.strings[0].notes.length;
+    let numMeasures = Math.ceil(currentNoteWidth / maxMeasureWidth);
+    let currentMeasures = this.measures.length;
+    if(currentMeasures < numMeasures){
+      //let maxNoteLength = Math.floor(maxMeasureWidth / currentNoteWidth);
+      let maxNoteLength = 3;
+      console.log('build measures');
+      console.log(maxMeasureWidth,noteWidth);
+      this.tabService.getTabMeasures(maxNoteLength);
+      let strings = this.selectedTab.strings;
+      this.measures.push(strings);
+    }
     //this.refNote
   }
 

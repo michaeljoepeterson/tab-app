@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import {AuthService} from './auth-service.service';
 import { Tab } from '../models/tabs/tab';
 import { Note } from '../models/tabs/note';
+import { InstrumentString } from '../models/tabs/instrumentString';
 
 @Injectable({
   providedIn: 'root'
@@ -88,5 +89,12 @@ export class TabService {
     note.fretNumber = null;
     currentTab.strings[selectedString].notes[selectedNote] = note;
     this.setTab(currentTab);
+  }
+  /**
+   * break up tab into measures based off max note length
+   * @param maxNoteLength max note length for each strings note array
+   */
+  getTabMeasures(maxNoteLength:number):Array<InstrumentString[]>{
+    return this._selectedTab.value.buildMeasures(maxNoteLength);
   }
 }
