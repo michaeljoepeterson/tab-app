@@ -39,7 +39,7 @@ export class AuthService {
         this.tempAuth = new AuthInfo();
         let token = null;
         if(user){
-          console.log('user: ',user.displayName);
+          //console.log('user: ',user.displayName);
           this.tempAuth.user = new User();
           this.tempAuth.user.email = user.email;
           return user.getIdToken();
@@ -73,7 +73,7 @@ export class AuthService {
       })
       ).subscribe((response) => {
         this.token.next({...this.tempAuth});
-        console.log(this.roles);
+        //console.log(this.roles);
         this.tempAuth = null;
     });
   }

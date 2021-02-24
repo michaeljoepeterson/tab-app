@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AuthInfo } from 'src/app/models/users/authInfoInterface';
 import {AuthService} from '../../../services/auth-service.service';
@@ -15,18 +16,38 @@ import {TabService} from '../../../services/tab-service.service';
 export class CreateTabComponent implements OnInit {
   currentToken:string = null;
   subscriptions:Subscription[] = [];
-  tokenObservable:Observable<AuthInfo> = new Observable(null);
   authInfo:AuthInfo = null;
   selectedTab:any = null;
 
   constructor(
     private authService:AuthService,
     private ref:ChangeDetectorRef,
-    private tabService:TabService
+    private tabService:TabService,
+    private route:ActivatedRoute,
+    //private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.tokenObservable = this.checkToken();
+    //need this?
+    /*
+    let routerSub = this.router.events.subscribe((val) => {
+      if(val instanceof NavigationEnd){
+        console.log(val); 
+        const tab = this.route.snapshot.paramMap.get('tab');
+        console.log(tab);
+        if(!tab){
+          this.tabService.newTab();
+        }
+      }
+    });
+    this.subscriptions.push(routerSub);
+    */
+
+    const tab = this.route.snapshot.paramMap.get('tab');
+    //console.log(tab);
+    if(!tab){
+      this.tabService.newTab();
+    }
 
     let authSub = this.authService.currentToken.subscribe(auth => {
       this.authInfo = auth;
@@ -34,7 +55,7 @@ export class CreateTabComponent implements OnInit {
     });
 
     this.subscriptions.push(authSub);
-
+    
     let sub = this.tabService.getTest().subscribe({
       next:response =>{
         console.log('res',response);
@@ -43,7 +64,6 @@ export class CreateTabComponent implements OnInit {
         console.warn('error getting test: ',err);
       },
       complete:() => {
-        console.log('clean up');
         sub.unsubscribe();
       }
     })
@@ -56,9 +76,5 @@ export class CreateTabComponent implements OnInit {
     catch(e){
       console.warn('Error cleaning up: ',e);
     }
-  }
-
-  checkToken():Observable<AuthInfo>{
-    return this.authService.currentToken;
   }
 }

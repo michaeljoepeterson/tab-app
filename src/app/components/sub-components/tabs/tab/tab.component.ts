@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { TabService } from '../../../../services/tab-service.service';
 import { InstrumentString } from '../../../../models/tabs/instrumentString';
 import { Note } from '../../../../models/tabs/note';
 import { Tab } from '../../../../models/tabs/tab';
@@ -20,6 +22,7 @@ interface KeyMap{
   styleUrls: ['./tab.component.css']
 })
 export class TabComponent implements OnInit {
+  //move to service?
   @Input() selectedTab:Tab;
   /**
    * @strings pass custom strings if needed
@@ -27,7 +30,9 @@ export class TabComponent implements OnInit {
   @Input() strings:InstrumentString[] = [];
   @Input() instrumentType:string = 'guitar';
 
-  @ViewChild('refNote') refNote:ElementRef; 
+  @ViewChild('refNote') refNote:ElementRef;
+
+  subscriptions:Subscription[] = [];
 
   //directions for cursor
   up:string = 'up';
@@ -99,23 +104,26 @@ export class TabComponent implements OnInit {
   }
 
   constructor(
+    private tabService:TabService,
     private ref: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    if(!this.selectedTab){
-      this.selectedTab = new Tab();
-      this.initTab();
-    }
+    let tabSub = this.tabService.selectedTab.subscribe(tab => {
+      this.selectedTab = tab;
+      this.buildMeasures();
+    });
+
+    this.subscriptions = [tabSub];
   }
 
-  initTab(){
-    if(this.strings.length === 0 || this.instrumentType === this.instrumentTypes.guitar){
-      this.selectedTab.initGuitarTab(this.defaultNoteNum);
-      console.log(this.selectedTab);
+  ngOnDestroy(){
+    try{
+      this.subscriptions.forEach(sub => sub.unsubscribe());
     }
-
-    this.buildMeasures();
+    catch(e){
+      console.warn('Error cleaning up tab: ',e);
+    }
   }
 
   buildMeasures(){
@@ -196,9 +204,9 @@ export class TabComponent implements OnInit {
     try{
       let numRegex = /\d{1}/g;
       let number = key.match(numRegex);
-      let selectedNote = this.getSelectedNote();
+      let selectedNote = this.tabService.getSelectedNote(this.selectedString,this.selectedNote);
       selectedNote.fretNumber = Number(number);
-      this.setSelectedNote(selectedNote);
+      this.tabService.setSelectedNote(this.selectedString,this.selectedNote,selectedNote);
       this.moveCursor(this.right);
     }
     catch(e){
@@ -209,9 +217,9 @@ export class TabComponent implements OnInit {
    * delete currently highlighted note
    */
   handleBackSpacePress(){
-    let selectedNote = this.getSelectedNote();
+    let selectedNote = this.tabService.getSelectedNote(this.selectedString,this.selectedNote);
     selectedNote.fretNumber = null;
-    this.setSelectedNote(selectedNote);
+    this.tabService.deleteNote(this.selectedString,this.selectedNote);
     this.moveCursor(this.left);
   }
 
@@ -221,11 +229,10 @@ export class TabComponent implements OnInit {
   handleSpacePress(){
     let maxNote = this.selectedTab.strings[0].notes.length - 1;
     if(this.selectedNote === maxNote){
-      
+      this.tabService.insertNotes(maxNote);
     }
     else{
-      this.selectedTab.insertNotes(this.selectedNote);
-      //this.moveCursor(this.right);
+      this.tabService.insertNotes(this.selectedNote);
     }
   }
 
@@ -233,7 +240,7 @@ export class TabComponent implements OnInit {
    * add space to all strings at index selected
    */
   handleDeletePressed(){
-    this.selectedTab.removeNotes(this.selectedNote);
+    this.tabService.removeNotes(this.selectedNote);
   }
 
   tabSelected(){
@@ -249,11 +256,4 @@ export class TabComponent implements OnInit {
     this.selectedNote = fretIndex;
   }
 
-  getSelectedNote():Note{
-    return this.selectedTab.strings[this.selectedString].notes[this.selectedNote]
-  }
-
-  setSelectedNote(note:Note){
-    this.selectedTab.strings[this.selectedString].notes[this.selectedNote] = note;
-  }
 }
