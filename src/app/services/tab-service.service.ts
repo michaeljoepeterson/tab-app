@@ -68,6 +68,7 @@ export class TabService {
     let currentTab = this._selectedTab.value;
     currentTab.insertNotes(noteIndex);
     this.setTab(currentTab);
+    console.log('currentTab',currentTab);
   }
   /**
    * remove notes from a specific index across all strings

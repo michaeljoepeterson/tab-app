@@ -4,6 +4,9 @@ import { Note } from "./note";
 export class Tab{
     tabName:string = null;
     strings:InstrumentString[] = [];
+    //eventually move data structure to this
+    //also eventually page to limit number of measures per page
+    measures:Array<InstrumentString[]> = [];
 
     constructor(){
         
@@ -95,7 +98,7 @@ export class Tab{
                 measures[index].push(newString);
             });
         }
-        console.log(measures);
+        //console.log('measures: ',measures);
         return measures;
     }
 }

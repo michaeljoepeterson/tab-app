@@ -113,7 +113,6 @@ export class TabComponent implements OnInit {
   ngOnInit(): void {
     let tabSub = this.tabService.selectedTab.subscribe(tab => {
       this.selectedTab = tab;
-      console.log(this.selectedTab);
       this.buildMeasures();
     });
 
@@ -128,23 +127,21 @@ export class TabComponent implements OnInit {
       console.warn('Error cleaning up tab: ',e);
     }
   }
-
-  buildMeasures(){
+  //move to tab class
+  buildMeasures(forceBuild?:boolean){
     const maxMeasureWidth = window.innerWidth * .9;
     const noteWidth = this.refNote ? this.refNote.nativeElement.offsetWidth : this.noteWidth;
     let currentNoteWidth = noteWidth * this.selectedTab.strings[0].notes.length;
     let numMeasures = Math.ceil(currentNoteWidth / maxMeasureWidth);
     let currentMeasures = this.measures.length;
-    if(currentMeasures < numMeasures){
-      //let maxNoteLength = Math.floor(maxMeasureWidth / currentNoteWidth);
-      let maxNoteLength = 3;
+    if(currentMeasures < numMeasures || forceBuild){
+      let maxNoteLength = Math.floor(maxMeasureWidth / noteWidth);
+      //let maxNoteLength = 3;
       console.log('build measures');
-      console.log(maxMeasureWidth,noteWidth);
-      this.tabService.getTabMeasures(maxNoteLength);
-      let strings = this.selectedTab.strings;
-      this.measures.push(strings);
+      console.log(maxMeasureWidth,currentNoteWidth,maxNoteLength);    
+      this.measures = this.tabService.getTabMeasures(maxNoteLength);
     }
-    //this.refNote
+    console.log(this.measures);
   }
 
   /**
@@ -249,6 +246,7 @@ export class TabComponent implements OnInit {
     else{
       this.tabService.insertNotes(this.selectedNote);
     }
+    this.buildMeasures(true);
   }
 
   /**
@@ -256,6 +254,7 @@ export class TabComponent implements OnInit {
    */
   handleDeletePressed(){
     this.tabService.removeNotes(this.selectedNote);
+    this.buildMeasures(true);
   }
 
   tabSelected(){
