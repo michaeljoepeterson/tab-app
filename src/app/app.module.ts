@@ -10,8 +10,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { AppRoutingModule } from './app-routing.module';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
-import { TabViewerComponent } from './components/pages/tab-viewer/tab-viewer.component';
-import { TabComponent } from './components/sub-components/tabs/tab/tab.component';
 import { UserLoginComponent } from './components/sub-components/user-login/user-login.component';
 import { fbConfig } from './firebase-config';
 import { AngularFireModule } from "@angular/fire";
@@ -20,7 +18,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AuthService } from './services/auth-service.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { CreateTabComponent } from './components/pages/create-tab/create-tab.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -32,10 +29,7 @@ import { HomePageComponent } from './components/pages/home-page/home-page.compon
     AppComponent,
     NavbarComponent,
     NotFoundComponent,
-    TabViewerComponent,
-    TabComponent,
     UserLoginComponent,
-    CreateTabComponent,
     HomePageComponent
   ],
   imports: [

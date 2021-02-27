@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { AuthInfo } from 'src/app/models/users/authInfoInterface';
 import {AuthService} from '../../../services/auth-service.service';
-import {TabService} from '../../../services/tab-service.service';
+import { TabService } from '../../services/tab-service.service';
 /**
  * used for creating and editing tabs
  */
@@ -22,8 +22,8 @@ export class CreateTabComponent implements OnInit {
   constructor(
     private authService:AuthService,
     private ref:ChangeDetectorRef,
-    private tabService:TabService,
     private route:ActivatedRoute,
+    private tabService:TabService,
     //private router: Router
   ) { }
 
@@ -45,10 +45,11 @@ export class CreateTabComponent implements OnInit {
 
     const tab = this.route.snapshot.paramMap.get('tab');
     //console.log(tab);
+    
     if(!tab){
       this.tabService.newTab();
     }
-
+    
     let authSub = this.authService.currentToken.subscribe(auth => {
       this.authInfo = auth;
       this.ref.markForCheck();
@@ -67,6 +68,7 @@ export class CreateTabComponent implements OnInit {
         sub.unsubscribe();
       }
     })
+    
   }
 
   ngOnDestroy(){

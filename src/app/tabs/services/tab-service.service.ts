@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {AuthService} from './auth-service.service';
-import { Tab } from '../models/tabs/tab';
-import { Note } from '../models/tabs/note';
-import { InstrumentString } from '../models/tabs/instrumentString';
+import {AuthService} from '../../services/auth-service.service';
+import { Tab } from '../models/tab';
+import { Note } from '../models/note';
+import { InstrumentString } from '../models/instrumentString';
 
 @Injectable({
   providedIn: 'root'

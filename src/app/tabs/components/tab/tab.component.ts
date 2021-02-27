@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { TabService } from '../../../../services/tab-service.service';
-import { InstrumentString } from '../../../../models/tabs/instrumentString';
-import { Note } from '../../../../models/tabs/note';
-import { Tab } from '../../../../models/tabs/tab';
+import { TabService } from '../../services/tab-service.service';
+import { InstrumentString } from '../../models/instrumentString';
+import { Note } from '../../models/note';
+import { Tab } from '../../models/tab';
 
 interface KeyMap{
   arrowright:string;
