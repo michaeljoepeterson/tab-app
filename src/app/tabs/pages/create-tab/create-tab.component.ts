@@ -42,7 +42,6 @@ export class CreateTabComponent implements OnInit {
     });
     this.subscriptions.push(routerSub);
     */
-
     const tab = this.route.snapshot.paramMap.get('tab');
     //console.log(tab);
     
