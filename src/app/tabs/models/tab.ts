@@ -27,13 +27,28 @@ export class Tab{
     }
 
     initBassTab(){
-        
+       
     }
 
     insertNotes(index:number){
         this.strings.forEach(instrumentString => {
             instrumentString.insertNote(index);
         });
+    }
+
+    initMeasures(noteWidth:number,forceBuild?:boolean){
+        const maxMeasureWidth = window.innerWidth * .9;
+        let currentNoteWidth = noteWidth * this.strings[0].notes.length;
+        let numMeasures = Math.ceil(currentNoteWidth / maxMeasureWidth);
+        let currentMeasures = this.measures.length;
+        if(currentMeasures < numMeasures || forceBuild){
+            let maxNoteLength = Math.floor(maxMeasureWidth / noteWidth);
+            //let maxNoteLength = 3;
+            console.log('build measures model');
+            //console.log(maxMeasureWidth,currentNoteWidth,maxNoteLength);    
+            this.measures = this.buildMeasures(maxNoteLength);
+        }
+        console.log('measures',this.measures);
     }
 
     addNotes(numNotes?:number){
@@ -89,7 +104,7 @@ export class Tab{
         let firstKey = keys.next().value;
         let numMeasures = stringMap.get(firstKey).length;
         let measures = this.buildEmptyMeasures(numMeasures);
-        console.log(stringMap);
+        console.log('string map',stringMap);
 
         for (const [stringName, value] of stringMap.entries()) {
             value.forEach((noteArray,index) => {

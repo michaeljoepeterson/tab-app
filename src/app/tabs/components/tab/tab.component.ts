@@ -113,7 +113,8 @@ export class TabComponent implements OnInit {
   ngOnInit(): void {
     let tabSub = this.tabService.selectedTab.subscribe(tab => {
       this.selectedTab = tab;
-      this.buildMeasures();
+      const noteWidth = this.refNote ? this.refNote.nativeElement.offsetWidth : this.noteWidth;
+      this.tabService.initTabMeasures(noteWidth);
     });
 
     this.subscriptions = [tabSub];
@@ -128,6 +129,7 @@ export class TabComponent implements OnInit {
     }
   }
   //move to tab class
+  //once delete and adding setup to work with measures no longer need to force build
   buildMeasures(forceBuild?:boolean){
     const maxMeasureWidth = window.innerWidth * .9;
     const noteWidth = this.refNote ? this.refNote.nativeElement.offsetWidth : this.noteWidth;
@@ -137,9 +139,10 @@ export class TabComponent implements OnInit {
     if(currentMeasures < numMeasures || forceBuild){
       let maxNoteLength = Math.floor(maxMeasureWidth / noteWidth);
       //let maxNoteLength = 3;
-      console.log('build measures');
+      console.log('build measures component');
       console.log(maxMeasureWidth,currentNoteWidth,maxNoteLength);    
-      this.measures = this.tabService.getTabMeasures(maxNoteLength);
+      //this.measures = this.tabService.getTabMeasures(maxNoteLength);
+      this.tabService.initTabMeasures(noteWidth,forceBuild);
     }
     console.log(this.measures);
   }

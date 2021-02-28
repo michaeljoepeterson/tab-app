@@ -98,4 +98,12 @@ export class TabService {
   getTabMeasures(maxNoteLength:number):Array<InstrumentString[]>{
     return this._selectedTab.value.buildMeasures(maxNoteLength);
   }
+
+  initTabMeasures(noteWidth:number,forceBuild?:boolean){
+    let currentTab = this._selectedTab.value;
+    if(!currentTab.measures || currentTab.measures.length === 0 || forceBuild){
+      currentTab.initMeasures(noteWidth,forceBuild);
+      this.setTab(currentTab);
+    }
+  }
 }
