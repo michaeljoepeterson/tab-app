@@ -46,8 +46,8 @@ export class TabService {
    * @param selectedString string index
    * @param selectedNote note index
    */
-  getSelectedNote(selectedString:number,selectedNote:number):Note{
-    return this._selectedTab.value.strings[selectedString].notes[selectedNote];
+  getSelectedNote(selectedString:number,selectedNote:number,measure:number):Note{
+    return this._selectedTab.value.measures[measure][selectedString].notes[selectedNote];
   }
   /**
    * set a note at a selected string and note
@@ -55,9 +55,9 @@ export class TabService {
    * @param selectedNote note index 
    * @param note new note for the specified note
    */
-  setSelectedNote(selectedString:number,selectedNote:number,note:Note){
+  setSelectedNote(selectedString:number,selectedNote:number,measure:number,note:Note){
     let currentTab = this._selectedTab.value;
-    currentTab.strings[selectedString].notes[selectedNote] = note;
+    currentTab.measures[measure][selectedString].notes[selectedNote] = note;
     this.setTab(currentTab);
   }
   /**
@@ -84,9 +84,9 @@ export class TabService {
    * @param selectedString string index
    * @param selectedNote note index 
    */
-  deleteNote(selectedString:number,selectedNote:number){
+  deleteNote(selectedString:number,selectedNote:number,measure:number){
     let currentTab = this._selectedTab.value;
-    let note = this.getSelectedNote(selectedString,selectedNote);
+    let note = this.getSelectedNote(selectedString,selectedNote,measure);
     note.fretNumber = null;
     currentTab.strings[selectedString].notes[selectedNote] = note;
     this.setTab(currentTab);

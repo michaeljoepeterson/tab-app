@@ -63,8 +63,10 @@ export class TabComponent implements OnInit {
   isNoteView:boolean = false;
   selectedString:number = 0;
   selectedNote:number = 0;
+  selectedMeasure:number = 0;
   tabIsSelected:boolean = false;
   numberIdentifiers:string[] = ['numpad','digit'];
+  minNoteWidth:number;
   /**
    * @measures to ensure the tabs do not go beyond view width, use to construct measures
    * sourced from selected tab
@@ -116,8 +118,11 @@ export class TabComponent implements OnInit {
       const noteWidth = this.refNote ? this.refNote.nativeElement.offsetWidth : this.noteWidth;
       this.tabService.initTabMeasures(noteWidth);
     });
-
     this.subscriptions = [tabSub];
+  }
+  
+  ngAfterViewInit(){
+    this.initMinNoteWidth();
   }
 
   ngOnDestroy(){
@@ -128,23 +133,32 @@ export class TabComponent implements OnInit {
       console.warn('Error cleaning up tab: ',e);
     }
   }
+  /**
+   * init the min width for the notes
+   */
+  initMinNoteWidth(){
+    const noteWidth = this.refNote ? this.refNote.nativeElement.getBoundingClientRect().width : this.noteWidth;
+    this.noteWidth = noteWidth;
+    this.ref.markForCheck();
+  }
+
   //move to tab class
   //once delete and adding setup to work with measures no longer need to force build
   buildMeasures(forceBuild?:boolean){
     const maxMeasureWidth = window.innerWidth * .9;
-    const noteWidth = this.refNote ? this.refNote.nativeElement.offsetWidth : this.noteWidth;
+    const noteWidth = this.refNote ? this.refNote.nativeElement.getBoundingClientRect().width : this.noteWidth;
     let currentNoteWidth = noteWidth * this.selectedTab.strings[0].notes.length;
     let numMeasures = Math.ceil(currentNoteWidth / maxMeasureWidth);
     let currentMeasures = this.measures.length;
+    console.log(noteWidth);
     if(currentMeasures < numMeasures || forceBuild){
       let maxNoteLength = Math.floor(maxMeasureWidth / noteWidth);
       //let maxNoteLength = 3;
-      console.log('build measures component');
-      console.log(maxMeasureWidth,currentNoteWidth,maxNoteLength);    
+      //console.log('build measures component');
+      //console.log(maxMeasureWidth,currentNoteWidth,maxNoteLength);    
       //this.measures = this.tabService.getTabMeasures(maxNoteLength);
       this.tabService.initTabMeasures(noteWidth,forceBuild);
     }
-    console.log(this.measures);
   }
 
   /**
@@ -153,16 +167,29 @@ export class TabComponent implements OnInit {
    */
   moveCursor(direction:string){
     if(direction === this.up){
-      if(this.selectedString === 0){
-        this.selectedString = 0
+      //move up to next measure bottom string
+      if(this.selectedString === 0 && this.selectedMeasure > 0){
+        this.selectedMeasure -= 1;
+        //check if current measure has more notes
+        this.selectedString = this.selectedTab.measures[this.selectedMeasure].length - 1;
+      }
+      else if(this.selectedMeasure === 0 && this.selectedString === 0){
+        this.selectedString = 0;
       }
       else{
         this.selectedString = this.selectedString - 1;
       }
     }
     else if(direction === this.down){
-      let maxString = this.selectedTab.strings.length - 1;
-      if(this.selectedString === maxString){
+      let maxString = this.selectedTab.measures[this.selectedMeasure].length - 1;
+      let maxMeasure = this.selectedTab.measures.length - 1;
+      if(this.selectedString === maxString && this.selectedMeasure < maxMeasure){
+        this.selectedMeasure += 1;
+        this.selectedString = 0;
+        let measureMaxNote = this.selectedTab.measures[this.selectedMeasure][this.selectedString].notes.length - 1;
+        this.selectedNote = this.selectedNote > measureMaxNote ? measureMaxNote : this.selectedNote; 
+      }
+      else if(this.selectedString === maxString && this.selectedMeasure === maxMeasure){
         this.selectedString = maxString;
       }
       else{
@@ -178,7 +205,7 @@ export class TabComponent implements OnInit {
       }
     }
     else if(direction === this.right){
-      let maxNote = this.selectedTab.strings[0].notes.length - 1;
+      let maxNote = this.selectedTab.measures[this.selectedMeasure][this.selectedString].notes.length - 1;
       if(this.selectedNote === maxNote){
         this.selectedNote = maxNote;
       }
@@ -219,9 +246,9 @@ export class TabComponent implements OnInit {
     try{
       let numRegex = /\d{1}/g;
       let number = key.match(numRegex);
-      let selectedNote = this.tabService.getSelectedNote(this.selectedString,this.selectedNote);
+      let selectedNote = this.tabService.getSelectedNote(this.selectedString,this.selectedNote,this.selectedMeasure);
       selectedNote.fretNumber = Number(number);
-      this.tabService.setSelectedNote(this.selectedString,this.selectedNote,selectedNote);
+      this.tabService.setSelectedNote(this.selectedString,this.selectedNote,this.selectedMeasure,selectedNote);
       this.moveCursor(this.right);
     }
     catch(e){
@@ -232,9 +259,9 @@ export class TabComponent implements OnInit {
    * delete currently highlighted note
    */
   handleBackSpacePress(){
-    let selectedNote = this.tabService.getSelectedNote(this.selectedString,this.selectedNote);
+    let selectedNote = this.tabService.getSelectedNote(this.selectedString,this.selectedNote,this.selectedMeasure);
     selectedNote.fretNumber = null;
-    this.tabService.deleteNote(this.selectedString,this.selectedNote);
+    this.tabService.deleteNote(this.selectedString,this.selectedNote,this.selectedMeasure);
     this.moveCursor(this.left);
   }
 
@@ -268,9 +295,10 @@ export class TabComponent implements OnInit {
     this.tabIsSelected = false;
   }
 
-  selectFret(stringIndex:number,fretIndex:number){
+  selectFret(stringIndex:number,fretIndex:number,measureIndex:number){
     this.selectedString = stringIndex;
     this.selectedNote = fretIndex;
+    this.selectedMeasure = measureIndex;
   }
 
 }

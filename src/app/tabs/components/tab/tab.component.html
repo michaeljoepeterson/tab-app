@@ -2,46 +2,38 @@
     <h3 class="tab-title">{{selectedTab.tabName}}</h3>
     <div class="tab-container" (focus)="tabSelected()" (blur)="tabBlurred()" tabindex="1">
         <ng-container *ngFor="let measure of selectedTab.measures; let measureIndex = index">
-            <ng-container *ngFor="let instrumentString of measure;let stringIndex = index">
-                <div class="string-container">
-                    <div class="string-name">
-                        <span class="name">
-                            {{instrumentString.stringName}}
-                        </span>
-                        <span>
-                            |
-                        </span>
-                    </div>
-                    <ng-container *ngFor="let note of instrumentString.notes; let noteIndex = index">
-                        <ng-container *ngIf="note.fretNumber || note.fretNumber === 0"> 
-                            <ng-container *ngIf="noteIndex === 0">
-                                <div #refNote [ngClass]="{
-                                    'highlighted':stringIndex === selectedString && noteIndex === selectedNote,
+            <div class="measure-container">
+                <ng-container *ngFor="let instrumentString of measure;let stringIndex = index">
+                    <div class="string-container">
+                        <div class="string-name">
+                            <span class="name">
+                                {{instrumentString.stringName}}
+                            </span>
+                            <span>
+                                |
+                            </span>
+                        </div>
+                        <ng-container *ngFor="let note of instrumentString.notes; let noteIndex = index">
+                            <ng-container *ngIf="note.fretNumber || note.fretNumber === 0"> 
+                                <div [ngStyle]="{'min-width':noteWidth + 'px'}" [ngClass]="{
+                                    'highlighted':stringIndex === selectedString && noteIndex === selectedNote && selectedMeasure === measureIndex,
                                     'note':true
-                                }" (click)="selectFret(stringIndex,noteIndex)">
+                                }" (click)="selectFret(stringIndex,noteIndex,measureIndex)">
                                     {{note.fretNumber}}
                                 </div>
                             </ng-container>
-                            <ng-container *ngIf="noteIndex !== 0">
+                            <ng-container *ngIf="!note.fretNumber && note.fretNumber !== 0">
                                 <div [ngClass]="{
-                                    'highlighted':stringIndex === selectedString && noteIndex === selectedNote,
+                                    'highlighted':stringIndex === selectedString && noteIndex === selectedNote && measureIndex === selectedMeasure,
                                     'note':true
-                                }" (click)="selectFret(stringIndex,noteIndex)">
-                                    {{note.fretNumber}}
+                                }" (click)="selectFret(stringIndex,noteIndex,measureIndex)">
+                                    -
                                 </div>
                             </ng-container>
                         </ng-container>
-                        <ng-container *ngIf="!note.fretNumber && note.fretNumber !== 0">
-                            <div [ngClass]="{
-                                'highlighted':stringIndex === selectedString && noteIndex === selectedNote,
-                                'note':true
-                            }" (click)="selectFret(stringIndex,noteIndex)">
-                                -
-                            </div>
-                        </ng-container>
-                    </ng-container>
-                </div>
-            </ng-container>
+                    </div>
+                </ng-container>
+            </div>
         </ng-container>
         <!-- <ng-container *ngFor="let instrumentString of selectedTab.strings;let stringIndex = index">
             <div class="string-container">
@@ -83,5 +75,10 @@
                 </ng-container>
             </div>
         </ng-container> -->
+    </div>
+    <div class="string-container">
+        <div #refNote class="hidden note" (click)="selectFret(stringIndex,noteIndex,measureIndex)">
+            -
+        </div>
     </div>
 </ng-container>

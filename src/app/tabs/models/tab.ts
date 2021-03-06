@@ -44,11 +44,10 @@ export class Tab{
         if(currentMeasures < numMeasures || forceBuild){
             let maxNoteLength = Math.floor(maxMeasureWidth / noteWidth);
             //let maxNoteLength = 3;
-            console.log('build measures model');
-            //console.log(maxMeasureWidth,currentNoteWidth,maxNoteLength);    
+            //console.log('build measures model'); 
             this.measures = this.buildMeasures(maxNoteLength);
         }
-        console.log('measures',this.measures);
+       console.log('measures',this.measures);
     }
 
     addNotes(numNotes?:number){
@@ -104,7 +103,7 @@ export class Tab{
         let firstKey = keys.next().value;
         let numMeasures = stringMap.get(firstKey).length;
         let measures = this.buildEmptyMeasures(numMeasures);
-        console.log('string map',stringMap);
+        //console.log('string map',stringMap);
 
         for (const [stringName, value] of stringMap.entries()) {
             value.forEach((noteArray,index) => {
@@ -113,7 +112,6 @@ export class Tab{
                 measures[index].push(newString);
             });
         }
-        //console.log('measures: ',measures);
         return measures;
     }
 }

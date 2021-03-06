@@ -14,7 +14,7 @@
 }
 
 .note{
-    min-width: 14px;
+    min-width: 14.36px;
     display: flex;
     align-items: center;
 }
@@ -36,6 +36,10 @@
 .measure{
     max-width: 97vw;
     overflow: hidden;
+}
+
+.measure-container{
+    margin-bottom: 1rem;
 }
 
 @keyframes highlighted{
