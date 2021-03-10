@@ -4,7 +4,18 @@ export class Note{
     fretNumber:number = null;
     displayNote:string = null;
 
-    constructor(){
-        
+    constructor(note?:any){
+        if(note){
+            this.mapNote(note);
+        }
+    }
+
+    mapNote(note:any){
+        let props = Object.keys(this);
+        props.forEach(prop => {
+            if(note[prop]){
+                this[prop] = note[prop];
+            }
+        })
     }
 }

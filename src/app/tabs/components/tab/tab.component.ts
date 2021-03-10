@@ -139,26 +139,8 @@ export class TabComponent implements OnInit {
   initMinNoteWidth(){
     const noteWidth = this.refNote ? this.refNote.nativeElement.getBoundingClientRect().width : this.noteWidth;
     this.noteWidth = noteWidth;
+    this.tabService.setNoteWidth(this.noteWidth);
     this.ref.markForCheck();
-  }
-
-  //move to tab class
-  //once delete and adding setup to work with measures no longer need to force build
-  buildMeasures(forceBuild?:boolean){
-    const maxMeasureWidth = window.innerWidth * .9;
-    const noteWidth = this.refNote ? this.refNote.nativeElement.getBoundingClientRect().width : this.noteWidth;
-    let currentNoteWidth = noteWidth * this.selectedTab.strings[0].notes.length;
-    let numMeasures = Math.ceil(currentNoteWidth / maxMeasureWidth);
-    let currentMeasures = this.measures.length;
-    console.log(noteWidth);
-    if(currentMeasures < numMeasures || forceBuild){
-      let maxNoteLength = Math.floor(maxMeasureWidth / noteWidth);
-      //let maxNoteLength = 3;
-      //console.log('build measures component');
-      //console.log(maxMeasureWidth,currentNoteWidth,maxNoteLength);    
-      //this.measures = this.tabService.getTabMeasures(maxNoteLength);
-      this.tabService.initTabMeasures(noteWidth,forceBuild);
-    }
   }
 
   /**
@@ -269,14 +251,9 @@ export class TabComponent implements OnInit {
    * add space to all strings at index selected
    */
   handleSpacePress(){
-    let maxNote = this.selectedTab.strings[0].notes.length - 1;
-    if(this.selectedNote === maxNote){
-      this.tabService.insertNotes(maxNote);
-    }
-    else{
-      this.tabService.insertNotes(this.selectedNote);
-    }
-    this.buildMeasures(true);
+    //this.tabService.insertNotesInMeasure(this.selectedMeasure,this.selectedNote);
+    this.tabService.insertNotes(this.selectedNote);
+    this.tabService.initTabMeasures(this.noteWidth,true);
   }
 
   /**
@@ -284,7 +261,7 @@ export class TabComponent implements OnInit {
    */
   handleDeletePressed(){
     this.tabService.removeNotes(this.selectedNote);
-    this.buildMeasures(true);
+    this.tabService.initTabMeasures(this.noteWidth,true);
   }
 
   tabSelected(){

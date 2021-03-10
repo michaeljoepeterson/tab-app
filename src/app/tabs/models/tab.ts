@@ -29,7 +29,10 @@ export class Tab{
     initBassTab(){
        
     }
-
+    /**
+     * insert a note at a index
+     * @param index index to insert at
+     */
     insertNotes(index:number){
         this.strings.forEach(instrumentString => {
             instrumentString.insertNote(index);
@@ -47,16 +50,23 @@ export class Tab{
             //console.log('build measures model'); 
             this.measures = this.buildMeasures(maxNoteLength);
         }
-       console.log('measures',this.measures);
+        console.log('measures',this.measures);
     }
 
+    /**
+     * add notes to end of string array
+     * @param numNotes number of notes to add
+     */
     addNotes(numNotes?:number){
         numNotes = numNotes ? numNotes : 1;
         this.strings.forEach(instrumentString => {
             instrumentString.addNote(numNotes);
         });
     }
-
+    /**
+     * remove notes at a index
+     * @param index index to remove at
+     */
     removeNotes(index:number){
         this.strings.forEach(instrumentString => {
             instrumentString.removeNote(index);

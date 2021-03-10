@@ -22,10 +22,11 @@ export class InstrumentString{
         }
     }
 
-    addNote(numNotes?:number){
+    addNote(numNotes?:number,note?:Note){
+        note = note ? note : new Note();
         numNotes = numNotes ? numNotes : 1;
         for(let i = 0;i < numNotes;i++){
-            this.notes.push(new Note());
+            this.notes.push(note);
         }
     }
 
@@ -33,12 +34,13 @@ export class InstrumentString{
         this.notes.splice(index,1);
     }
 
-    insertNote(index:number){
+    insertNote(index:number,note?:Note){
+        note = note ? note : new Note();
         if(index === this.notes.length - 1){
-            this.addNote();
+            this.addNote(null,note);
         }
         else{
-            this.notes.splice(index,0,new Note());
+            this.notes.splice(index,0,note);
         }
     }
 }

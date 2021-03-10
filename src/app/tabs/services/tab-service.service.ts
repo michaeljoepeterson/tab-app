@@ -13,6 +13,10 @@ import { InstrumentString } from '../models/instrumentString';
 export class TabService {
   private _selectedTab:BehaviorSubject<Tab> = new BehaviorSubject(new Tab());
   selectedTab = this._selectedTab.asObservable();
+  /**
+   * note width from tab component since component has the note, default to 14 
+   */ 
+  noteWidth:number = 14;
 
   constructor(
     private http: HttpClient,
@@ -36,6 +40,10 @@ export class TabService {
       tab.initGuitarTab();
       this._selectedTab.next(tab);
     }
+  }
+
+  setNoteWidth(width:number){
+    this.noteWidth = width;
   }
 
   setTab(tab:Tab){
@@ -101,6 +109,7 @@ export class TabService {
 
   initTabMeasures(noteWidth:number,forceBuild?:boolean){
     let currentTab = this._selectedTab.value;
+    this.noteWidth = noteWidth;
     if(!currentTab.measures || currentTab.measures.length === 0 || forceBuild){
       currentTab.initMeasures(noteWidth,forceBuild);
       this.setTab(currentTab);
