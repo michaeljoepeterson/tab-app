@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Host
 import { Subscription } from 'rxjs';
 import { TabService } from '../../services/tab-service.service';
 import { InstrumentString } from '../../models/instrumentString';
-import { Note } from '../../models/note';
 import { Tab } from '../../models/tab';
 
 interface KeyMap{

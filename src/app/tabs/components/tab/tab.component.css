@@ -30,7 +30,7 @@
 }
 
 .tab-title{
-    margin: 0.5em 0;
+    margin: 0.5em 0.5em;
 }
 
 .measure{
@@ -40,6 +40,11 @@
 
 .measure-container{
     margin-bottom: 1rem;
+}
+
+.tab-header-container{
+    display: flex;
+    align-items: center;
 }
 
 @keyframes highlighted{

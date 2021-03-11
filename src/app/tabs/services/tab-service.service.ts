@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import {AuthService} from '../../services/auth-service.service';
 import { Tab } from '../models/tab';
 import { Note } from '../models/note';
 import { InstrumentString } from '../models/instrumentString';
+import { TabRequest } from '../models/tab-request';
+import { delay, map } from 'rxjs/operators';
+import { NotificationsService } from '../../services/notifications.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +23,8 @@ export class TabService {
 
   constructor(
     private http: HttpClient,
-    private authService:AuthService
+    private authService:AuthService,
+    private notificationService:NotificationsService
   ) { }
   //eventually add this to base request builder
   getTest():Observable<any>{
@@ -114,5 +118,22 @@ export class TabService {
       currentTab.initMeasures(noteWidth,forceBuild);
       this.setTab(currentTab);
     }
+  }
+
+  saveTab():Observable<any>{
+    let tabRequest:TabRequest = this._selectedTab.value.getTabRequest();
+    console.log('tab request', tabRequest);
+    //then save to service
+    return of(null).pipe(
+      map(resp => {
+        this.notificationService.setLoading(true);
+        return resp;
+      }),
+      delay(2000),
+      map(resp => {
+        this.notificationService.setLoading(false);
+        return resp;
+      })
+    );
   }
 }

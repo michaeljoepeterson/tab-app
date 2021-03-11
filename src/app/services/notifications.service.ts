@@ -12,11 +12,16 @@ export class NotificationsService {
   defaultDuration:number = 4000;
   defaultAction:string = 'Close';
   
-  _noScroll:BehaviorSubject<boolean> = new BehaviorSubject(false);
+  private _noScroll:BehaviorSubject<boolean> = new BehaviorSubject(false);
   /**
    * @noScroll - used to toggle html scroll for popups or overlays
    */
   noScroll = this._noScroll.asObservable();
+  /**
+   * boolean to toggle global loading icon
+   */
+  private _isLoading:BehaviorSubject<boolean> = new BehaviorSubject(false);
+  isLoading = this._isLoading.asObservable();
 
   constructor(
     private _snackBar: MatSnackBar
@@ -37,5 +42,10 @@ export class NotificationsService {
     this._snackBar.open(errorMessage, action, {
       duration: duration,
     });
+  }
+
+  setLoading(loading:boolean){
+    console.log(loading);
+    this._isLoading.next(loading);
   }
 }

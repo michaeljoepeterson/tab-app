@@ -62,6 +62,10 @@ export class InstrumentString{
                 noteString += note.fretNumber;
                 emptyNoteCount = 0;
             }
+
+            if(index === this.notes.length - 1 && emptyNoteCount > 0){
+                noteString += `${emptyNoteCount}}}`;
+            }
         });
 
         return noteString;
