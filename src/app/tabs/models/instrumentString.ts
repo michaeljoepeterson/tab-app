@@ -1,4 +1,5 @@
 import { Note } from "./note";
+import { StringRequest } from "./tab-request";
 /**
  * @InstrumentString model to represent a single string
  */
@@ -42,5 +43,37 @@ export class InstrumentString{
         else{
             this.notes.splice(index,0,note);
         }
+    }
+
+    stringifyNotes():string{
+        let noteString = '';
+        let emptyNoteCount = 0;
+        this.notes.forEach((note,index) => {
+            if(!note.fretNumber && note.fretNumber !== 0){
+                if(emptyNoteCount === 0){
+                    noteString += '{{';
+                }
+                emptyNoteCount++;
+            }
+            else{
+                if(emptyNoteCount !== 0){
+                    noteString += `${emptyNoteCount}}}`;
+                }
+                noteString += note.fretNumber;
+                emptyNoteCount = 0;
+            }
+        });
+
+        return noteString;
+    }
+
+    getStringRequest():StringRequest{
+        let request:StringRequest = {
+            stringName:this.stringName,
+            notes:null
+        };
+        request.notes = this.stringifyNotes();
+
+        return request;
     }
 }

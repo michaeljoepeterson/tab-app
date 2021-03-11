@@ -1,5 +1,6 @@
 import { InstrumentString } from "./instrumentString";
 import { Note } from "./note";
+import { TabRequest } from "./tab-request";
 
 export class Tab{
     tabName:string = null;
@@ -7,6 +8,7 @@ export class Tab{
     //eventually move data structure to this
     //also eventually page to limit number of measures per page
     measures:Array<InstrumentString[]> = [];
+    description:string = 'test description';
 
     constructor(){
         
@@ -17,7 +19,7 @@ export class Tab{
      */
     initGuitarTab(noteCount?:number){
         noteCount = noteCount ? noteCount : 20;
-        let guitarStrings = ['E','A','D','G','B','e'];
+        let guitarStrings = ['e','B','G','D','A','E'];
         this.tabName = 'My Guitar Tab';
         this.strings = guitarStrings.map(stringName => {
             let string = new InstrumentString(stringName);
@@ -123,5 +125,17 @@ export class Tab{
             });
         }
         return measures;
+    }
+
+    getTabRequest():TabRequest{
+        let request:TabRequest = {
+            tabName:this.tabName,
+            description:this.description,
+            strings:null
+        };
+
+        request.strings = this.strings.map(iString => iString.getStringRequest());
+
+        return request;
     }
 }

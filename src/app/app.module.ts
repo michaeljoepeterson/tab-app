@@ -23,6 +23,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { HomePageComponent } from './components/pages/home-page/home-page.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { HomePageComponent } from './components/pages/home-page/home-page.compon
     MatSnackBarModule,
     FormsModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    NgbModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent],
